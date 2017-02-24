@@ -1,6 +1,17 @@
 @extends('layouts.admin')
 
 @section('content')
+
+    @if(Session::has('added'))
+        <div class="alert alert-success">{{ session('added') }}</div>
+    @endif
+    @if(Session::has('deleted'))
+        <div class="alert alert-danger">{{ session('deleted') }}</div>
+    @endif
+    @if(Session::has('updated'))
+        <div class="alert alert-info">{{ session('updated') }}</div>
+    @endif
+
     <h1>Users</h1>
 
     <table class="table table-striped users">
