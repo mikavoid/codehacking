@@ -3,7 +3,7 @@
 @section('content')
     <h1>Users</h1>
 
-    <table class="table table-striped">
+    <table class="table table-striped users">
         <thead>
         <tr>
             <th>Id</th>
@@ -20,7 +20,14 @@
             @foreach($users as $user)
                 <tr>
                     <td>{{ $user->id }}</td>
-                    <td>{{ $user->name }}</td>
+                    <td>
+                        <a href="{{ route('admin.users.edit', $user->id) }}">
+                            <div class="photo_thumbnail_container">
+                            <img src=" {{ $user->photo ? $user->photo->path : '/nophoto.jpg'}} " alt="">
+                            </div>
+                        </a>
+                    </td>
+                    <td><a href="{{ route('admin.users.edit', $user->id) }}">{{ $user->name }}</a></td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->role->name }}</td>
                     <td>{{ ($user->is_active ? 'Active' : 'Not active') }}</td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UsersRequest;
+use App\Http\Requests\UsersEditRequest;
 use App\User;
 use App\Role;
 use App\Photo;
@@ -20,7 +21,7 @@ class AdminUsersController extends Controller
     public function index()
     {
         $users = User::all();
-        $users->load('role');
+        $users->load('role', 'photo');
         return view('admin.users.index', compact('users'));
     }
 
@@ -43,7 +44,13 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
-        $input = $request->all();
+
+        if (trim($request->password) == '') {
+            $input = $request->except('password');
+        } else {
+            $input = $request->all();
+            $input['password'] = bcrypt($request->password);
+        }
         $root_path = getenv('UPLOADED_FILES_ROOT');
 
         if ($file = $request->file('photo')) {
@@ -54,8 +61,6 @@ class AdminUsersController extends Controller
             $input['photo_id'] = $photo->id;
 
         }
-
-        $input['password'] = bcrypt($request->password);
 
         User::create($input);
         return redirect('/admin/users');
@@ -80,7 +85,11 @@ class AdminUsersController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.users.edit');
+        $user = User::findOrFail($id);
+        $user->load('role');
+        $roles = Role::lists('name', 'id')->all();
+
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -90,9 +99,29 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsersEditRequest $request, $id)
     {
-        //
+        if (trim($request->password) == '') {
+            $input = $request->except('password');
+        } else {
+            $input = $request->all();
+            $input['password'] = bcrypt($request->password);
+        }
+        $user = User::findOrfail($id);
+
+        $root_path = getenv('UPLOADED_FILES_ROOT');
+
+        if ($file = $request->file('photo')) {
+            $name = time() . $file->getClientOriginalName();
+            $file->move($root_path . '/images', $name);
+
+            $photo = Photo::create(['path' => $name]);
+            $input['photo_id'] = $photo->id;
+
+        }
+        $user->update($input);
+
+        return redirect('/admin/users');
     }
 
     /**
