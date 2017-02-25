@@ -48,8 +48,6 @@
 
 
         <ul class="nav navbar-top-links navbar-right">
-
-
             <!-- /.dropdown -->
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -138,11 +136,11 @@
                         <a href="#"><i class="fa fa-wrench fa-fw"></i> Posts<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="/posts">All Posts</a>
+                                <a href="{{ route('admin.posts.index') }}">All Posts</a>
                             </li>
 
                             <li>
-                                <a href="/posts/create">Create Post</a>
+                                <a href="{{ route('admin.posts.create') }}">Create Post</a>
                             </li>
 
                         </ul>
