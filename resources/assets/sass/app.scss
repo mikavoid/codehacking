@@ -1,6 +1,11 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-
+.big_img_container {
+  max-height : 400px;
+  height : 100%;
+  overflow:hidden;
+}
 #admin-page {
+
   padding-top: 0;
   table {
     tr {
